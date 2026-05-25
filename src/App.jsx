@@ -41,6 +41,39 @@ useEffect(() => {
         socket.off("chat_joined");
     };
 }, [messageList]);
+const handleAddContact = async () => {
+    if (!contactInput.trim()) return;
+
+    const cleanTarget = contactInput.toLowerCase().trim();
+    const cleanMe = username.toLowerCase().trim();
+
+    try {
+      // 1. Save to your live Render database
+      const response = await fetch('https://chat-app-backend-osyn.onrender.com/add-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          username: cleanMe,
+          contactName: cleanTarget
+        })
+      });
+
+      const data = await response.json();
+      console.log("Logged in successfully:", data);
+
+      // 2. Signal the live socket server to open the chat room
+      socket.emit("access_chat", {
+        currentUsername: cleanMe,
+        targetUsername: cleanTarget
+      });
+
+      // 3. Update UI states
+      setContacts((prev) => [...prev, cleanTarget]);
+      setContactInput('');
+    } catch (error) {
+      console.error("Error adding contact:", error);
+    }
+  };
  const joinRoom = () => {
     if (username !== "") {
         const cleanName = username.toLowerCase().trim();
@@ -129,22 +162,7 @@ return (
     onChange={(e) => setContactInput(e.target.value.toLowerCase().trim())}
     style={{ flex: 1, padding: '5px' }}
 />
-<button onClick={() => {
-    if (contactInput.trim() !== "") {
-        const cleanTarget = contactInput.toLowerCase().trim();
-        const cleanMe = username.toLowerCase().trim();
-
-        socket.emit("access_chat", { 
-            currentUsername: cleanMe, 
-            targetUsername: cleanTarget 
-        });
-
-        // 🔥 ADD THIS LINE BACK TO USE IT AND FIX THE ERROR
-        setContacts((prev) => [...prev, cleanTarget]); 
-
-        setContactInput("");
-    }
-}}>Add</button>
+<button onClick={handleAddContact}>Add</button>
 
               
               </div>
