@@ -16,6 +16,7 @@ function App() {
   const [currentRoomId, setCurrentRoomId] =useState("");
   const messagesEndRef = useRef(null);
   const [typingStatus, setTypingStatus] = useState("");
+  const [onlineList, setOnlineList] = useState([]);
 
 useEffect(() => {
     // 1. Listen for the backend confirming a chat link is active
@@ -125,9 +126,13 @@ useEffect(() => {
       setCurrentRoomId(roomId); 
       setMessageList(history);  
     });
+    socket.on("update_online_users", (users) => {
+      setOnlineList(users);
+    });
 
     return () => {
       socket.off('receive_message');
+      socket.off('update_online_users');
       socket.off('chat_initialized');
       socket.off('user_typing');      // <-- Add this cleanup
       socket.off('user_stop_typing'); //<-- Add this cleanup
@@ -194,7 +199,18 @@ return (
                 });
               }}
             >
-              <span className="username-text">{contact}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+              <span className="username-text" style={{ flex: 1 }}>{contact}</span>
+              
+              <div style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                backgroundColor: onlineList.includes(contact.toLowerCase().trim()) ? '#10b981' : '#64748b',
+                boxShadow: onlineList.includes(contact.toLowerCase().trim()) ? '0 0 8px #10b981' : 'none',
+                transition: 'all 0.3s ease-in-out'
+              }} />
+            </div>
             </div>
           ))}
         </div>
