@@ -146,140 +146,108 @@ return (
           <button onClick={joinRoom}>Login</button>
         </div>
       ) : (
-        <div className="whatsapp-container" style={{ display: 'flex', width: '1000px', height: '600px', border: '1px solid #ccc', margin: '20px auto' }}>
-          {/* SIDEBAR CONTAINER */}
-          <div className="sidebar" style={{ width: '300px', borderRight: '1px solid #ccc', display: 'flex', flexDirection: 'column', background: '#fff' }}>
-            <div style={{ padding: '10px', background: '#ededed' }}>
-              <h4>Welcome, {username}</h4>
-              <div style={{ display: 'flex', marginTop: '5px' }}>
-  <input 
-    type="text"
-    placeholder="Add contact name..."
-    autoCapitalize="none"
-    autoCorrect="off"
-    value={contactInput}
-    // 🔥 Force lowercase immediately on input to stop mobile keyboard bugs
-    onChange={(e) => setContactInput(e.target.value.toLowerCase().trim())}
-    style={{ flex: 1, padding: '5px' }}
-/>
-<button onClick={handleAddContact}>Add</button>
-
-              
-              </div>
-            </div>
-            
- {/* CONTACTS LIST */}
-<div className="contacts-list" style={{ flex: 1, overflowY: 'auto' }}>
-  {contacts.map((contact, idx) => (
-    <div
-      key={idx}
-  onClick={() => {
-        // 1. Set the active contact for your UI styling
-        setActiveChat(contact);
+ <div className="chat-container">
+      {/* SIDEBAR CONTAINER */}
+      <div className="sidebar">
         
-        // 2. Trigger the dynamic international database chat fetch
-        socket.emit("access_chat", {
-          currentUsername: username.toLowerCase().trim(),
-          targetUsername: contact
-        });
-      }}
-      style={{
-        padding: '15px',
-        borderBottom: '1px solid #eee',
-        cursor: 'pointer',
-        background: activeChat === contact ? '#ebebeb' : 'white'
-      }}
-    >
-      <strong>{contact}</strong>
-    </div>
-  ))}
-</div>
+        <div className="sidebar-header">
+          <h2>Chats</h2>
+          <h4 style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>Welcome, {username}</h4>
+          
+          <div className="add-user-form">
+            <input
+              type="text"
+              placeholder="Add contact name..."
+              autoCapitalize="none"
+              autoCorrect="off"
+              value={contactInput}
+              onChange={(e) => setContactInput(e.target.value.toLowerCase().trim())}
+            />
+            <button onClick={handleAddContact}>Add</button>
           </div>
+        </div>
+            
+{/* CONTACTS LIST */}
+        <div className="users-list">
+          {contacts.map((contact, idx) => (
+            <div 
+              key={idx} 
+              className={`user-item ${activeChat === contact ? 'active' : ''}`}
+              onClick={() => {
+                setActiveChat(contact);
+                socket.emit("access_chat", {
+                  currentUsername: username.toLowerCase().trim(),
+                  targetUsername: contact
+                });
+              }}
+            >
+              <span className="username-text">{contact}</span>
+            </div>
+          ))}
+        </div>
+</div> {/* This closes your sidebar cleanly */}
 
-          {/* MAIN CHAT SCREEN AREA */}
-          <div className="chat-window" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#efeae2' }}>
-            {activeChat ? (
-              <>
-                <div className="chat-header" style={{ padding: '10px', background: '#ededed', borderBottom: '1px solid #ccc' }}>
-                  <p style={{ margin: 0 }}>Chatting with: <strong>{activeChat}</strong></p>
+    {/* MAIN CHAT SCREEN AREA */}
+    <div className="chat-window">
+      {activeChat ? (
+        <>
+          <div className="sidebar-header" style={{ padding: '16px 24px', background: 'var(--bg-sidebar)' }}>
+            <p style={{ margin: 0, fontWeight: 600 }}>
+              Chatting with: <span className="username-text">{activeChat}</span>
+            </p>
+          </div>
+          
+ <div className="chat-messages">
+            {messageList.map((content, idx) => {
+              const isOwnMessage = content.author === username;
+              return (
+                <div 
+                  key={idx} 
+                  className={`message-bubble ${isOwnMessage ? 'me' : 'them'}`}
+                  style={{ position: 'relative', paddingBottom: '20px' }}
+                >
+                  <p style={{ margin: 0 }}>{content.message}</p>
+                  <span style={{ 
+                    fontSize: '10px', 
+                    color: 'var(--text-muted)', 
+                    position: 'absolute', 
+                    bottom: '2px', 
+                    right: '8px' 
+                  }}>
+                    {content.timestamp ? new Date(content.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                  </span>
                 </div>
-                <div className="chat-body" style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
- {messageList.map((content, idx) => {
-  const isOwnMessage = content.author === username;
-  
-  return (
-    <div
-      key={idx}
-      style={{
-        display: 'flex',
-        justifyContent: isOwnMessage ? 'flex-end' : 'flex-start',
-        width: '100%',
-        marginBottom: '10px'
-      }}
-    >
-      <div
-        style={{
-          background: isOwnMessage ? '#d9fdd3' : '#ffffff',
-          color: '#303030',
-          padding: '8px 12px',
-          borderRadius: '8px',
-          maxWidth: '60%',
-          boxShadow: '0 1px 1px rgba(0,0,0,0.1)',
-          position: 'relative'
-        }}
-      >
-        <p style={{ margin: 0, paddingRight: '35px', fontSize: '15px', wordBreak: 'break-word' }}>
-          {content.message}
-        </p>
-        <span 
-          style={{ 
-            fontSize: '10px', 
-            color: '#8696a0', 
-            position: 'absolute', 
-            bottom: '2px', 
-            right: '5px' 
-          }}
-        >
-          {content.timestamp ? new Date(content.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : content.time}
-        </span>
-      </div>
+              );
+            })}
+          
+       <div ref={messagesEndRef} />
     </div>
-  );
-})}
-<div ref={messagesEndRef} />
-</div>
-{typingStatus && (
+   {typingStatus && (
   <div style={{ padding: '5px 15px', fontSize: '13px', color: '#8696a0', fontStyle: 'italic' }}>
     {typingStatus}
   </div>
-)}
-{typingStatus && (
+  )}
+  {typingStatus && (
   <div style={{ padding: '5px 15px', fontSize: '13px', color: '#8696a0', fontStyle: 'italic', background: '#f0f2f5' }}>
     {typingStatus}
   </div>
 )}
-  <div className="chat-footer" style={{ display: 'flex', padding: '10px', background: '#f0f0f0', borderTop: '1px solid #ccc' }}>
-  <input
-  type="text"
-  value={message}
-  placeholder="Type a message..."
-  onChange={(e) => {
-    setMessage(e.target.value);
-
-    // If input is not empty, tell the server we are typing
-    if (e.target.value !== "") {
-      socket.emit("typing", { room: currentRoomId, username: username });
-    } else {
-      socket.emit("stop_typing", { room: currentRoomId });
-    }
-  }}
-  onBlur={() => {
-    // Clear indicator when user clicks away from the box
-    socket.emit("stop_typing", { room: currentRoomId });
-  }}
-  onKeyPress={(e) => { e.key === "Enter" && sendMessage(); }}
-  style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
-/>
+ <div className="chat-input-area">
+  <input 
+    type="text"
+    value={message}
+    placeholder="Type a message..."
+    onChange={(e) => {
+      setMessage(e.target.value);
+      if (e.target.value !== "") {
+        socket.emit("typing", { room: currentRoomId, username: username });
+      } else {
+        socket.emit("stop_typing", { room: currentRoomId });
+      }
+    }}
+    onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
+    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+  />
                   <button onClick={sendMessage} style={{ padding: '10px 20px', cursor: 'pointer' }}>Send</button>
                 </div>
               </>
