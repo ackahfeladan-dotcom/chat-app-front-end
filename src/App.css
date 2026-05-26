@@ -325,3 +325,23 @@ body {
 .login-form-group button:hover {
   background-color: var(--primary-hover);
 }
+/* 🚀 Mobile Optimization for Phones */
+@media (max-width: 768px) {
+  .chat-container {
+    flex-direction: column; /* Stacks layout vertically instead of side-by-side */
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .sidebar {
+    flex: 0 0 auto;
+    width: 100%; /* Sidebar takes full width if visible */
+    max-height: 40vh; /* Limits sidebar height so chat has room */
+  }
+
+  /* Force elements to fit clean without spilling over */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
