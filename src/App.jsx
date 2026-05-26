@@ -135,15 +135,28 @@ useEffect(() => {
   }, [currentRoomId]);
 return (
     <div className="App">
-      {!joined ? (
-        <div className="join-container">
-          <h3>Login to Chat</h3>
-          <input 
-            type="text" 
-            placeholder="Your Name..." 
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <button onClick={joinRoom}>Login</button>
+{!joined ? (
+        <div className="login-container">
+          <div className="login-card">
+            <div className="login-logo">
+              <svg viewBox="0 0 24 24" width="50" height="50" fill="currentColor">
+                <path d="M12.003 21.13c-.417 0-.817-.072-1.196-.21a1.002 1.002 0 0 0-.796.066L7 22.5v-3.323a1 1 0 0 0-.317-.724A9.231 9.231 0 0 1 3.5 12c0-4.963 4.037-9 9-9s9 4.037 9 9-4.037 9-9 9.13zM12 1a11 11 0 0 0-8.91 17.416L2 23l4.796-1.744A10.941 10.941 0 0 0 12 23c6.075 0 11-4.925 11-11S18.075 1 12 1z"/>
+              </svg>
+            </div>
+            <h2>Welcome to ChatApp</h2>
+            <p>Enter your username to launch your real-time chat dashboard.</p>
+            
+            <div className="login-form-group">
+              <input 
+                type="text" 
+                placeholder="Your Name..." 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && joinRoom()}
+              />
+              <button onClick={joinRoom}>Login</button>
+            </div>
+          </div>
         </div>
       ) : (
  <div className="chat-container">
