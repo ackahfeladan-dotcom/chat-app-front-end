@@ -315,6 +315,7 @@ return (
                   isImage: true,
                   timestamp: new Date().toISOString()
                 });
+                setMessageList((list) => [...list, { room: currentRoomId, author: username, message: data.secure_url, isImage: true, timestamp: new Date().toISOString() }]);
               }
             } catch (err) {
               console.error("Upload failed", err);
