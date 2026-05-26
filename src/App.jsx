@@ -301,7 +301,7 @@ return (
             formData.append("upload_preset", "chat_app_preset");
 
             try {
-              const res = await fetch("https://api.cloudinary.com/v1_1/dxk6lsrpc/image/upload", {
+              const res = await fetch("https://api.cloudinary.com/v1_1/dxk6jsrpc/image/upload", {
                 method: "POST",
                 body: formData
               });
