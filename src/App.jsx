@@ -121,13 +121,26 @@ useEffect(() => {
         setTypingStatus("");
     });
 
-    // Listen for database history logs initialization
+// Listen for database history logs initialization
     socket.on('chat_initialized', ({ roomId, history }) => {
-      setCurrentRoomId(roomId); 
-      setMessageList(history);  
+      setCurrentRoomId(roomId);
+      setMessageList(history);
+      
+      // 🌟 This must go INSIDE this block so it knows what roomId is!
+      socket.emit('mark_as_read', { chatId: roomId });
     });
-    socket.on("update_online_users", (users) => {
+
+    socket.on('update_online_users', (users) => {
       setOnlineList(users);
+    });
+
+    // Listen for status updates on messages (Like read receipts)
+    socket.on('messages_updated_status', ({ chatId, status }) => {
+      if (chatId === currentRoomId) {
+        setMessageList((prev) =>
+          prev.map((msg) => ({ ...msg, status: status }))
+        );
+      }
     });
 
     return () => {
@@ -136,6 +149,7 @@ useEffect(() => {
       socket.off('chat_initialized');
       socket.off('user_typing');      // <-- Add this cleanup
       socket.off('user_stop_typing'); //<-- Add this cleanup
+      socket.off('messages_updated_status');
     };
   }, [currentRoomId]);
 return (
@@ -235,7 +249,15 @@ return (
                   className={`message-bubble ${isOwnMessage ? 'me' : 'them'}`}
                   style={{ position: 'relative', paddingBottom: '20px' }}
                 >
-                  <p style={{ margin: 0 }}>{content.message}</p>
+    {content.isImage ? (
+          <img 
+            src={content.message} 
+            alt="Shared attachment" 
+            style={{ maxWidth: '250px', borderRadius: '8px', marginTop: '4px', display: 'block' }} 
+          />
+        ) : (
+          <p style={{ margin: 0 }}>{content.message}</p>
+        )}
                   <span style={{ 
                     fontSize: '10px', 
                     color: 'var(--text-muted)', 
@@ -244,6 +266,7 @@ return (
                     right: '8px' 
                   }}>
                     {content.timestamp ? new Date(content.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                    {isOwnMessage && (content.status === 'read' ? ' ✔️✔️' : ' ✔️')}
                   </span>
                 </div>
               );
@@ -261,24 +284,66 @@ return (
     {typingStatus}
   </div>
 )}
- <div className="chat-input-area">
-  <input 
-    type="text"
-    value={message}
-    placeholder="Type a message..."
-    onChange={(e) => {
-      setMessage(e.target.value);
-      if (e.target.value !== "") {
-        socket.emit("typing", { room: currentRoomId, username: username });
-      } else {
-        socket.emit("stop_typing", { room: currentRoomId });
-      }
-    }}
-    onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
-    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-  />
-                  <button onClick={sendMessage} style={{ padding: '10px 20px', cursor: 'pointer' }}>Send</button>
-                </div>
+<div className="chat-input-area">
+      {/* 📎 Attachment Button Component */}
+      <label style={{ cursor: 'pointer', fontSize: '20px', display: 'flex', alignItems: 'center', marginRight: '8px', marginBottom: 0 }}>
+        📎
+        <input 
+          type="file" 
+          accept="image/*" 
+          style={{ display: 'none' }} 
+          onChange={async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "chat_app_preset");
+
+            try {
+              const res = await fetch("https://api.cloudinary.com/v1_1/dxk6jsrpc/image/upload", {
+                method: "POST",
+                body: formData
+              });
+              const data = await res.json();
+              
+              if (data.secure_url) {
+                socket.emit("send_message", {
+                  room: currentRoomId,
+                  author: username,
+                  message: data.secure_url,
+                  isImage: true,
+                  timestamp: new Date().toISOString()
+                });
+              }
+            } catch (err) {
+              console.error("Upload failed", err);
+            }
+          }} 
+        />
+      </label>
+
+      {/* 💬 Text Input Field Component */}
+      <input
+        type="text"
+        value={message}
+        placeholder="Type a message..."
+        onChange={(e) => {
+          setMessage(e.target.value);
+          if (e.target.value !== "") {
+            socket.emit("typing", { room: currentRoomId, username: username });
+          } else {
+            socket.emit("stop_typing", { room: currentRoomId });
+          }
+        }}
+        onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
+        onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+      />
+      
+      <button onClick={sendMessage} style={{ padding: '10px 20px', cursor: 'pointer' }}>
+        Send
+      </button>
+    </div>
               </>
             ) : (
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
