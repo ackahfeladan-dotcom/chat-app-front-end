@@ -1,29 +1,26 @@
 /* ==========================================
-   📊 MODERN SLATE CORPORATE DESIGN SYSTEM
+   🏠 RESTORED ORIGINAL DESIGN SYSTEM (MOBILE FIXED)
    ========================================== */
 
 :root {
-  /* Core UI Canvas Slate Layout */
-  --bg-main: #0B0F19;         /* Deep sleek slate workspace */
-  --bg-sidebar: #131A2C;      /* Lighter sidebar offset */
-  --bg-chat: #0F1424;         /* Message thread backdrop */
+  /* Your Exact Original Colors */
+  --bg-main: #0f172a;
+  --bg-sidebar: #1e293b;
+  --bg-chat: #0f172a;
+  --primary: #10b981;
+  --primary-hover: #059669;
   
-  /* Brand Action Colors */
-  --primary: #4F46E5;         /* Premium Indigo action accent */
-  --primary-hover: #4338CA;   /* Hover state active color */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
   
-  /* High-Contrast Typography */
-  --text-main: #F3F4F6;       /* Crisp bright text content */
-  --text-muted: #9CA3AF;      /* Highly readable slate gray */
-  --border-color: #1F2937;    /* Subtle clean layout borders */
-  
-  /* Chat Bubble Elements */
-  --bubble-me: #4F46E5;       /* Sender bubble matches indigo accent */
-  --bubble-them: #1F2937;     /* Receiver bubble matches system layout */
+  /* Restored Original Bubbles */
+  --bubble-me: #10b981;    /* Your Original Green Bubble */
+  --bubble-them: #334155;  /* Your Original Gray Bubble */
 }
 
 /* ==========================================
-   🏗️ STRUCTURAL LAYOUT ARCHITECTURE
+   🏗️ STABLE LAYOUT STRUCTURE (PINS TO BOTTOM)
    ========================================== */
 
 html, body {
@@ -43,7 +40,7 @@ html, body {
   padding: 0;
 }
 
-/* Main Outer App Container Dashboard View */
+/* Base App Wrapper Container */
 .chat-container {
   display: flex;
   width: 100vw;
@@ -52,14 +49,13 @@ html, body {
   background-color: var(--bg-main);
 }
 
-/* Sidebar Navigation Frame */
+/* Desktop Sidebar Grid Alignment */
 .sidebar {
   flex: 0 0 320px;
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
 }
 
 .sidebar-header {
@@ -67,7 +63,7 @@ html, body {
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Chat Main View Window Frame */
+/* Main Chat Log Window View */
 .chat-window {
   display: flex;
   flex-direction: column;
@@ -78,11 +74,11 @@ html, body {
   background-color: var(--bg-chat);
 }
 
-/* Scrollable Inner Chat Timeline */
+/* Scrollable Messages Canvas Thread */
 .chat-body {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden; /* BLOCKS HORIZONTAL SCROLL IN CONSOLE */
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -90,46 +86,45 @@ html, body {
 }
 
 /* ==========================================
-   💬 COMPONENT CHAT BUBBLES & FEATURES
+   💬 YOUR ORIGINAL BUBBLE ALIGNMENT SYSTEM
    ========================================== */
 
-.message {
-  display: flex;
-  flex-direction: column;
+/* Keeps your matching App.jsx layout intact */
+.message-bubble {
+  display: inline-block;
   max-width: 70%;
-  padding: 12px 16px;
-  border-radius: 16px;
-  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 8px;
+  line-height: 1.4;
   word-break: break-word;
   font-size: 15px;
+  margin: 4px 0;
 }
 
-.message.message-me {
+.message-bubble.me {
   align-self: flex-end;
   background-color: var(--bubble-me);
   color: #ffffff;
-  border-bottom-right-radius: 4px;
 }
 
-.message.message-them {
+.message-bubble.them {
   align-self: flex-start;
   background-color: var(--bubble-them);
   color: var(--text-main);
-  border-bottom-left-radius: 4px;
 }
 
-/* Uploaded Images Media Query Constraints */
-.message-content img {
+/* Image Render Sizing Bounds */
+.message-bubble img {
   max-width: 100%;
-  max-height: 280px;
+  max-height: 250px;
   object-fit: cover;
-  border-radius: 12px;
-  margin-top: 6px;
+  border-radius: 6px;
+  margin-top: 4px;
   display: block;
 }
 
 /* ==========================================
-   📥 BOTTOM FOOTER ACTION ROW (PINNED)
+   📥 ACTION BAR FOOTER DESIGN (PINS TO BOTTOM)
    ========================================== */
 
 .chat-footer {
@@ -148,35 +143,25 @@ html, body {
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
   color: var(--text-main);
-  padding: 14px 18px;
-  border-radius: 24px;
+  padding: 12px 16px;
+  border-radius: 4px;
   outline: none;
   font-size: 15px;
-  transition: border-color 0.2s ease;
-}
-
-.chat-footer input:focus {
-  border-color: var(--primary);
 }
 
 .chat-footer button {
   background-color: var(--primary);
   color: #ffffff;
   border: none;
-  padding: 12px 24px;
-  border-radius: 24px;
+  padding: 12px 20px;
+  border-radius: 4px;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.chat-footer button:hover {
-  background-color: var(--primary-hover);
 }
 
 /* ==========================================
-   📱 MOBILE RESPONSIVE ADAPTATION (768px)
+   📱 SYSTEM MOBILE PHONE OVERRIDE ALIGNMENT
    ========================================== */
 
 @media (max-width: 768px) {
@@ -185,7 +170,7 @@ html, body {
     flex-direction: column;
   }
 
-  /* Automatically adjust mobile sidebar display stacking */
+  /* Automatically fits responsive screen view variables safely */
   .sidebar {
     position: absolute;
     left: 0;
@@ -193,25 +178,24 @@ html, body {
     width: 100%;
     height: 100%;
     z-index: 10;
-    display: var(--display-sidebar, none); /* Hidden on small viewports if active chat session */
+    display: none; /* Hidden by default, can be toggled with a button */
   }
 
-  /* Chat window scales to 100% full height to pin footer clean */
-  .chat-window {
-    width: 100% !important;
-    height: 100vh;
-    height: -webkit-fill-available;
-  }
+.chat-window {
+  width: 100% !important;
+  height: -webkit-fill-available;
+  height: 100vh; /* Standard fallback listed last */
+}
 
   .chat-body {
     padding: 14px;
   }
 
-  .message {
-    max-width: 85%; /* Slightly wider message blocks on phone screens */
+  .message-bubble {
+    max-width: 85%;
   }
 
   .chat-footer {
-    padding: 12px 14px; /* Tighter padding borders for mobile edge */
+    padding: 12px 14px;
   }
 }
