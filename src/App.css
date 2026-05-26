@@ -187,10 +187,12 @@ html, body {
   height: 100vh; /* Standard fallback listed last */
 }
 
-  .chat-body {
+ .chat-body {
     padding: 14px;
+    display: flex !important;
+    flex-direction: column !important; /* Forces vertical stacking on phone screens */
+    gap: 12px;
   }
-
   .message-bubble {
     max-width: 85%;
   }

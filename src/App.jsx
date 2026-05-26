@@ -240,20 +240,23 @@ return (
             </p>
           </div>
           
- <div className="chat-messages">
-            {messageList.map((content, idx) => {
-              const isOwnMessage = content.author === username;
-              return (
-                <div 
-                  key={idx} 
-                  className={`message-bubble ${isOwnMessage ? 'me' : 'them'}`}
-                  style={{ position: 'relative', paddingBottom: '20px' }}
-                >
-    {content.isImage ? (
-          <img 
-            src={content.message} 
-            alt="Shared attachment" 
-            style={{ maxWidth: '250px', borderRadius: '8px', marginTop: '4px', display: 'block' }} 
+ <div className="chat-body">
+  {messageList.map((content, idx) => {
+    const isOwnMessage = content.author === username;
+    // 🚀 Robust check handles explicit flags and raw Cloudinary strings
+    const isAnImage = content.isImage || (content.message && content.message.includes("cloudinary.com"));
+    
+    return (
+      <div
+        key={idx}
+        className={`message-bubble ${isOwnMessage ? 'me' : 'them'}`}
+        style={{ position: 'relative', paddingBottom: '20px' }}
+      >
+        {isAnImage ? (
+          <img
+            src={content.message}
+            alt="Shared attachment"
+            style={{ maxWidth: '100%', maxHeight: '250px', borderRadius: '8px', marginTop: '4px', display: 'block' }}
           />
         ) : (
           <p style={{ margin: 0 }}>{content.message}</p>
