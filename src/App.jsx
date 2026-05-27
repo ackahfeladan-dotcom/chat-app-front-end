@@ -182,12 +182,9 @@ return (
       {/* SIDEBAR CONTAINER */}
       <div className="sidebar">
         
- <div className="sidebar-header">
+<div className="sidebar-header">
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
     <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '-0.5px' }}>Chats</h2>
-    <span style={{ backgroundColor: 'rgba(0, 168, 132, 0.1)', color: 'var(--primary)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600', border: '1px solid rgba(0, 168, 132, 0.2)' }}>
-      {username}
-    </span>
   </div>
   <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-muted)' }}>Welcome back to your workspace</p>
 </div>
@@ -301,67 +298,65 @@ return (
     {typingStatus}
   </div>
 )}
-<div className="chat-input-area">
-      {/* 📎 Attachment Button Component */}
-      <label style={{ cursor: 'pointer', fontSize: '20px', display: 'flex', alignItems: 'center', marginRight: '8px', marginBottom: 0 }}>
-        📎
-        <input 
-          type="file" 
-          accept="image/*" 
-          style={{ display: 'none' }} 
-          onChange={async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+<div className="chat-footer">
+  {/* Modern Attachment Upload Icon */}
+  <label className="attachment-btn" style={{ cursor: 'pointer', margin: 0 }}>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+    </svg>
+    <input
+      type="file"
+      accept="image/*"
+      style={{ display: 'none' }}
+      onChange={async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "chat_app_preset");
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "chat_app_preset");
 
-            try {
-              const res = await fetch("https://api.cloudinary.com/v1_1/dxk6jsrpc/image/upload", {
-                method: "POST",
-                body: formData
-              });
-              const data = await res.json();
-              
-              if (data.secure_url) {
-                socket.emit("send_message", {
-                  room: currentRoomId,
-                  author: username,
-                  message: data.secure_url,
-                  isImage: true,
-                  timestamp: new Date().toISOString()
-                });
-                setMessageList((list) => [...list, { room: currentRoomId, author: username, message: data.secure_url, isImage: true, timestamp: new Date().toISOString() }]);
-              }
-            } catch (err) {
-              console.error("Upload failed", err);
-            }
-          }} 
-        />
-      </label>
-
-      {/* 💬 Text Input Field Component */}
-      <input
-        type="text"
-        value={message}
-        placeholder="Type a message..."
-        onChange={(e) => {
-          setMessage(e.target.value);
-          if (e.target.value !== "") {
-            socket.emit("typing", { room: currentRoomId, username: username });
-          } else {
-            socket.emit("stop_typing", { room: currentRoomId });
+        try {
+          const res = await fetch("https://api.cloudinary.com/v1_1/dxk6jsrpc/image/upload", {
+            method: "POST",
+            body: formData
+          });
+          const data = await res.json();
+          if (data.secure_url) {
+            setMessage(data.secure_url);
           }
-        }}
-        onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
-        onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-      />
-      
-      <button onClick={sendMessage} style={{ padding: '10px 20px', cursor: 'pointer' }}>
-        Send
-      </button>
-    </div>
+        } catch (err) {
+          console.error("Upload failed:", err);
+        }
+      }}
+    />
+  </label>
+
+  {/* Pill Message Bar with your Typing Status Logic */}
+  <input
+    type="text"
+    placeholder="Type a message..."
+    value={message} // Make sure this matches your variable name (currentMessage or message)
+    onChange={(e) => {
+      setMessage(e.target.value);
+      if (e.target.value !== "") {
+        socket.emit("typing", { room: currentRoomId, username: username });
+      } else {
+        socket.emit("stop_typing", { room: currentRoomId });
+      }
+    }}
+    onBlur={() => socket.emit("stop_typing", { room: currentRoomId })}
+    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+  />
+
+  {/* WhatsApp-Style Circular Send Button */}
+  <button className="send-btn" onClick={sendMessage}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13"></line>
+      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+    </svg>
+  </button>
+</div>
               </>
             ) : (
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
