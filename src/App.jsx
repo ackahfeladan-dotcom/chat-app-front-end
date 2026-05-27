@@ -182,22 +182,31 @@ return (
       {/* SIDEBAR CONTAINER */}
       <div className="sidebar">
         
-        <div className="sidebar-header">
-          <h2>Chats</h2>
-          <h4 style={{ color: 'var(--text-muted)', marginBottom: '10px' }}>Welcome, {username}</h4>
-          
-          <div className="add-user-form">
-            <input
-              type="text"
-              placeholder="Add contact name..."
-              autoCapitalize="none"
-              autoCorrect="off"
-              value={contactInput}
-              onChange={(e) => setContactInput(e.target.value.toLowerCase().trim())}
-            />
-            <button onClick={handleAddContact}>Add</button>
-          </div>
-        </div>
+ <div className="sidebar-header">
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+    <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '-0.5px' }}>Chats</h2>
+    <span style={{ backgroundColor: 'rgba(0, 168, 132, 0.1)', color: 'var(--primary)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600', border: '1px solid rgba(0, 168, 132, 0.2)' }}>
+      {username}
+    </span>
+  </div>
+  <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-muted)' }}>Welcome back to your workspace</p>
+</div>
+
+{/* THE ADVANCED ACTION BAR ROW */}
+<div className="add-contact-form">
+  <input
+    type="text"
+    className="add-contact-input"
+    placeholder="Add contact name..."
+    autoCapitalize="none"
+    autoCorrect="off"
+    value={contactInput}
+    onChange={(e) => setContactInput(e.target.value.toLowerCase().trim())}
+  />
+  <button className="add-contact-button" onClick={handleAddContact}>
+    Add
+  </button>
+</div>
             
 {/* CONTACTS LIST */}
         <div className="users-list">
