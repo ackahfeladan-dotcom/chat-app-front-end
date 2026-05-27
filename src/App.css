@@ -91,7 +91,7 @@ html, body {
 
 /* Keeps your matching App.jsx layout intact */
 .message-bubble {
-  display: inline-block;
+  display: block; /* Changed from inline-block to block */
   max-width: 70%;
   padding: 10px 14px;
   border-radius: 8px;
@@ -134,12 +134,16 @@ html, body {
   padding: 16px 20px;
   background-color: var(--bg-sidebar);
   border-top: 1px solid var(--border-color);
+  
+  /* CRITICAL MOBILE FIXES */
   width: 100%;
+  box-sizing: border-box; /* Forces padding inside the 100% width */
   z-index: 5;
 }
 
 .chat-footer input {
   flex: 1;
+  min-width: 0; /* Prevents input from growing beyond container on mobile */
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
   color: var(--text-main);
@@ -200,4 +204,30 @@ html, body {
   .chat-footer {
     padding: 12px 14px;
   }
+}
+/* Forces the chat feed area to contain elements within screen boundaries */
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden; /* Stops horizontal shift */
+  padding: 16px;
+  width: 100%;
+}
+
+/* Fixes individual bubbles from overflowing mobile layouts */
+.message-bubble {
+  max-width: 75%; /* Prevents text from hitting the opposite wall */
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap; /* Keeps user linebreaks without busting borders */
+}
+
+/* Image attachment container restriction */
+.message-bubble img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }

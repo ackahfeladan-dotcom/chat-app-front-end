@@ -241,33 +241,38 @@ return (
           </div>
           
  <div className="chat-body">
-  {messageList.map((content, idx) => {
-    const isOwnMessage = content.author === username;
-    // 🚀 Robust check handles explicit flags and raw Cloudinary strings
-    const isAnImage = content.isImage || (content.message && content.message.includes("cloudinary.com"));
-    
-    return (
-      <div
-        key={idx}
-        className={`message-bubble ${isOwnMessage ? 'me' : 'them'}`}
-        style={{ position: 'relative', paddingBottom: '20px' }}
-      >
-        {isAnImage ? (
-          <img
-            src={content.message}
-            alt="Shared attachment"
-            style={{ maxWidth: '100%', maxHeight: '250px', borderRadius: '8px', marginTop: '4px', display: 'block' }}
-          />
-        ) : (
-          <p style={{ margin: 0 }}>{content.message}</p>
-        )}
-                  <span style={{ 
-                    fontSize: '10px', 
-                    color: 'var(--text-muted)', 
-                    position: 'absolute', 
-                    bottom: '2px', 
-                    right: '8px' 
-                  }}>
+{messageList.map((content, idx) => {
+  const isOwnMessage = content.author === username;
+  const isAnImage = content.isImage || (content.message && content.message.includes("cloudinary.com"));
+
+  return (
+    <div
+      key={idx}
+      className={`message-bubble ${isOwnMessage ? 'me' : 'them'}`}
+      style={{
+        position: 'relative',
+        paddingBottom: '20px',
+        alignSelf: isOwnMessage ? 'flex-end' : 'flex-start',
+        marginBottom: '12px'
+      }}
+    >
+      {isAnImage ? (
+        <img
+          src={content.message}
+          alt="Shared attachment"
+          style={{ maxWidth: '100%', maxHeight: '250px', borderRadius: '8px', marginTop: '4px' }}
+        />
+      ) : (
+        <p style={{ margin: 0 }}>{content.message}</p>
+      )}
+
+      <span style={{
+        fontSize: '10px',
+        color: 'var(--text-muted)',
+        position: 'absolute',
+        bottom: '2px',
+        right: '8px'
+      }}>
                     {content.timestamp ? new Date(content.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                     {isOwnMessage && (content.status === 'read' ? ' ✔️✔️' : ' ✔️')}
                   </span>
