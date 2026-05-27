@@ -300,3 +300,86 @@ html, body {
     max-width: 85% !important;
   }
 }
+/* ==========================================================================
+   MATCHING CLASS HOOKS FOR APP.JSX LOGIN VIEW
+   ========================================================================== */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1c2e38 0%, #0b141a 100%);
+  padding: 20px;
+}
+
+.login-card {
+  background-color: #111b21;
+  padding: 30px 24px;
+  border-radius: 16px;
+  border: 1px solid #222e35;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.login-logo svg {
+  color: #2481cc; /* Telegram-style blue logo icon */
+  margin-bottom: 8px;
+}
+
+.login-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #e9edef;
+  margin: 10px 0 6px 0;
+}
+
+.login-card p {
+  color: #8696a0;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+/* Styled login text box */
+.login-form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #202c33;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #e9edef;
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.login-form-group input:focus {
+  border-color: #2481cc;
+  background-color: #2a3942;
+}
+
+/* Styled clean submit login button */
+.login-form-group button {
+  width: 100%;
+  padding: 14px;
+  background-color: #2481cc; /* Elegant Telegram blue action color */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(36, 129, 204, 0.25);
+  transition: all 0.2s ease;
+}
+
+.login-form-group button:hover {
+  background-color: #1d72b8;
+  box-shadow: 0 6px 16px rgba(36, 129, 204, 0.4);
+  transform: translateY(-1px);
+}
