@@ -1,27 +1,31 @@
-/* ==========================================
-   🏠 RESTORED ORIGINAL DESIGN SYSTEM (MOBILE FIXED)
-   ========================================== */
-
-:root {
-  /* Your Exact Original Colors */
-  --bg-main: #0f172a;
-  --bg-sidebar: #1e293b;
-  --bg-chat: #0f172a;
-  --primary: #10b981;
-  --primary-hover: #059669;
-  
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-color: #334155;
-  
-  /* Restored Original Bubbles */
-  --bubble-me: #10b981;    /* Your Original Green Bubble */
-  --bubble-them: #334155;  /* Your Original Gray Bubble */
+/* ==========================================================================
+   GLOBAL TELEGRAM/WHATSAPP INSPIRED MASTER RESET
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-/* ==========================================
-   🏗️ STABLE LAYOUT STRUCTURE (PINS TO BOTTOM)
-   ========================================== */
+:root {
+  /* Premium Dark Palette */
+  --bg-main: #0b141a;          /* Deep dark luxury background */
+  --bg-sidebar: #111b21;       /* WhatsApp-like slate sidebar */
+  --bg-chat: #0b141a;
+  --panel-header: #202c33;     /* Clear contrast header zones */
+  
+  /* Vibrant Accent Colors */
+  --primary: #00a884;          /* WhatsApp Teal Green */
+  --primary-hover: #008f72;
+  --telegram-blue: #2481cc;    /* Telegram Accent Blue */
+  
+  /* Typography & Lines */
+  --text-main: #e9edef;        /* Crisp, clear text */
+  --text-muted: #8696a0;       /* Perfect low-contrast text */
+  --border-color: #222e35;     /* Ultra-thin clean dividers */
+
+  /* Chat Bubbles */
+  --bubble-me: #005c4b;        /* WhatsApp Dark Green bubble */
+  --bubble-them: #202c33;      /* WhatsApp Dark Gray bubble */
+}
 
 html, body {
   margin: 0;
@@ -30,204 +34,269 @@ html, body {
   height: 100%;
   overflow: hidden;
   background-color: var(--bg-main);
-  color: var(--text-main);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Base App Wrapper Container */
-.chat-container {
+/* ==========================================================================
+   APP CONTAINER & SIDEBAR SYSTEM
+   ========================================================================== */
+.chat-layout, .chat-container {
   display: flex;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--bg-main);
 }
 
-/* Desktop Sidebar Grid Alignment */
-.sidebar {
-  flex: 0 0 320px;
-  background-color: var(--bg-sidebar);
-  border-right: 1px solid var(--border-color);
+.chat-sidebar, .sidebar {
   display: flex;
   flex-direction: column;
+  width: 340px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  height: 100%;
+  flex-shrink: 0;
 }
 
-.sidebar-header {
-  padding: 20px;
+.chat-window {
+  flex: 1;
+  background-color: var(--bg-chat);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   PREMIUM "ADD CONTACT" ROW DESIGN
+   ========================================================================== */
+.chat-sidebar form, 
+.add-contact-form {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 10px !important;
+  padding: 14px 16px !important;
+  width: 100% !important;
+  background-color: var(--bg-sidebar);
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Main Chat Log Window View */
-.chat-window {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-  background-color: var(--bg-chat);
+.chat-sidebar form input,
+.add-contact-input {
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: 10px 16px !important;
+  background-color: #202c33 !important; /* Inset contrast search style */
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: var(--text-main) !important;
+  font-size: 14px !important;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-/* Scrollable Messages Canvas Thread */
-.chat-body {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden; /* BLOCKS HORIZONTAL SCROLL IN CONSOLE */
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.chat-sidebar form input:focus,
+.add-contact-input:focus {
+  border-color: var(--primary) !important;
+  background-color: #2a3942 !important;
 }
 
-/* ==========================================
-   💬 YOUR ORIGINAL BUBBLE ALIGNMENT SYSTEM
-   ========================================== */
-
-/* Keeps your matching App.jsx layout intact */
-.message-bubble {
-  display: block; /* Changed from inline-block to block */
-  max-width: 70%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  line-height: 1.4;
-  word-break: break-word;
-  font-size: 15px;
-  margin: 4px 0;
+.chat-sidebar form button,
+.add-contact-button {
+  flex-shrink: 0 !important;
+  padding: 10px 20px !important;
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+  transition: all 0.15s ease !important;
 }
 
-.message-bubble.me {
-  align-self: flex-end;
-  background-color: var(--bubble-me);
-  color: #ffffff;
+.chat-sidebar form button:hover,
+.add-contact-button:hover {
+  background-color: var(--primary-hover) !important;
+  transform: translateY(-1px);
 }
 
-.message-bubble.them {
-  align-self: flex-start;
-  background-color: var(--bubble-them);
-  color: var(--text-main);
+.chat-sidebar form button:active,
+.add-contact-button:active {
+  transform: translateY(0);
 }
 
-/* Image Render Sizing Bounds */
-.message-bubble img {
-  max-width: 100%;
-  max-height: 250px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-top: 4px;
-  display: block;
-}
-
-/* ==========================================
-   📥 ACTION BAR FOOTER DESIGN (PINS TO BOTTOM)
-   ========================================== */
-
+/* ==========================================================================
+   PREMIUM MODERN CHAT FOOTER & SEND BAR
+   ========================================================================== */
 .chat-footer {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 20px;
-  background-color: var(--bg-sidebar);
-  border-top: 1px solid var(--border-color);
-  
-  /* CRITICAL MOBILE FIXES */
+  padding: 12px 18px;
+  background-color: var(--panel-header);
   width: 100%;
-  box-sizing: border-box; /* Forces padding inside the 100% width */
-  z-index: 5;
 }
 
 .chat-footer input {
   flex: 1;
-  min-width: 0; /* Prevents input from growing beyond container on mobile */
-  background-color: var(--bg-main);
-  border: 1px solid var(--border-color);
+  min-width: 0;
+  background-color: #2a3942;
+  border: 1px solid transparent;
   color: var(--text-main);
-  padding: 12px 16px;
-  border-radius: 4px;
+  padding: 11px 18px;
+  border-radius: 22px; /* Pill-shaped like modern apps */
   outline: none;
   font-size: 15px;
+  transition: all 0.2s ease;
 }
 
-.chat-footer button {
+.chat-footer input:focus {
+  border-color: rgba(255,255,255,0.1);
+}
+
+.chat-footer button,
+.send-button {
   background-color: var(--primary);
   color: #ffffff;
   border: none;
-  padding: 12px 20px;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 15px;
+  border-radius: 50%; /* Perfect circle WhatsApp style button */
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 14px;
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-/* ==========================================
-   📱 SYSTEM MOBILE PHONE OVERRIDE ALIGNMENT
-   ========================================== */
-
-@media (max-width: 768px) {
-  .chat-container {
-    position: relative;
-    flex-direction: column;
-  }
-
-  /* Automatically fits responsive screen view variables safely */
-  .sidebar {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    display: none; /* Hidden by default, can be toggled with a button */
-  }
-
-.chat-window {
-  width: 100% !important;
-  height: -webkit-fill-available;
-  height: 100vh; /* Standard fallback listed last */
+.chat-footer button:hover,
+.send-button:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.05);
 }
 
- .chat-body {
-    padding: 14px;
-    display: flex !important;
-    flex-direction: column !important; /* Forces vertical stacking on phone screens */
-    gap: 12px;
-  }
-  .message-bubble {
-    max-width: 85%;
-  }
-
-  .chat-footer {
-    padding: 12px 14px;
-  }
+/* ==========================================================================
+   HIGH-END LOGIN / JOIN PORTAL DESIGN
+   ========================================================================== */
+.joinChatContainer, .login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1c2e38 0%, #0b141a 100%);
+  padding: 20px;
 }
-/* Forces the chat feed area to contain elements within screen boundaries */
+
+.joinChatContainer h3, .login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+}
+
+.joinChatContainer input, .login-input {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px 18px;
+  background-color: #111b21;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-main);
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.joinChatContainer input:focus, .login-input:focus {
+  border-color: var(--telegram-blue);
+}
+
+.joinChatContainer button, .login-button {
+  width: 100%;
+  max-width: 320px;
+  padding: 14px;
+  background-color: var(--telegram-blue); /* Sleek Telegram Blue for authentication */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(36, 129, 204, 0.25);
+  transition: all 0.2s ease;
+}
+
+.joinChatContainer button:hover, .login-button:hover {
+  background-color: #1d72b8;
+  box-shadow: 0 6px 16px rgba(36, 129, 204, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   MESSAGE CHAT BUBBLE ENGINE
+   ========================================================================== */
 .chat-body {
   display: flex;
   flex-direction: column;
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden; /* Stops horizontal shift */
-  padding: 16px;
+  overflow-x: hidden;
+  padding: 20px;
   width: 100%;
+  background-color: #0b141a;
 }
 
-/* Fixes individual bubbles from overflowing mobile layouts */
 .message-bubble {
-  max-width: 75%; /* Prevents text from hitting the opposite wall */
-  word-wrap: break-word;
+  display: block;
+  max-width: 65%;
+  padding: 8px 14px 10px 14px;
+  line-height: 1.45;
   word-break: break-word;
-  white-space: pre-wrap; /* Keeps user linebreaks without busting borders */
+  font-size: 15px;
+  margin: 4px 0;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15);
 }
 
-/* Image attachment container restriction */
-.message-bubble img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
+.message-bubble.me {
+  background-color: var(--bubble-me);
+  color: #e9edef;
+  align-self: flex-end;
+  border-radius: 8px 0px 8px 8px; /* Classic message tail-cut look */
+}
+
+.message-bubble.them {
+  background-color: var(--bubble-them);
+  color: #e9edef;
+  align-self: flex-start;
+  border-radius: 0px 8px 8px 8px;
+}
+
+/* ==========================================================================
+   CLEAN MOBILE RESPONSIVE ADAPTATION ENGINE
+   ========================================================================== */
+@media (max-width: 768px) {
+  .chat-layout, .chat-container {
+    flex-direction: column !important;
+  }
+
+  .chat-sidebar, .sidebar {
+    display: flex !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .message-bubble {
+    max-width: 85% !important;
+  }
 }
