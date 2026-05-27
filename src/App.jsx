@@ -87,12 +87,11 @@ const handleAddContact = async () => {
         setJoined(true);
     }
 };
-
- const sendMessage = async () => {
+const sendMessage = async () => {
     if (message !== "" && currentRoomId !== "") {
-
       const messageData = {
-        room:currentRoomId,
+        id: `${username}-${Date.now()}`, // Added unique ID for deletion tracking
+        room: currentRoomId,
         author: username,
         recipient: activeChat,
         message: message,
@@ -103,6 +102,13 @@ const handleAddContact = async () => {
       setMessageList((list) => [...list, messageData]);
       setMessage('');
     }
+  };
+
+  const deleteMessage = (messageId) => {
+    // Tell your backend socket to delete it globally
+    socket.emit('delete_message', { room: currentRoomId, id: messageId });
+    // Instantly remove it from your own screen safely
+    setMessageList((prevList) => prevList.filter((msg) => msg.id !== messageId));
   };
 
 useEffect(() => {
@@ -248,43 +254,69 @@ return (
           
  <div className="chat-body">
 {messageList.map((content, idx) => {
-  const isOwnMessage = content.author === username;
-  const isAnImage = content.isImage || (content.message && content.message.includes("cloudinary.com"));
+        const isOwnMessage = content.author === username;
+        const isAnImage = content.isImage || (content.message && content.message.includes("cloudinary.com"));
 
-  return (
-    <div
-      key={idx}
-      className={`message-bubble ${isOwnMessage ? 'me' : 'them'}`}
-      style={{
-        position: 'relative',
-        paddingBottom: '20px',
-        alignSelf: isOwnMessage ? 'flex-end' : 'flex-start',
-        marginBottom: '12px'
-      }}
-    >
-      {isAnImage ? (
-        <img
-          src={content.message}
-          alt="Shared attachment"
-          style={{ maxWidth: '100%', maxHeight: '250px', borderRadius: '8px', marginTop: '4px' }}
-        />
-      ) : (
-        <p style={{ margin: 0 }}>{content.message}</p>
-      )}
+        return (
+          <div
+            key={content.id || idx}
+            className={isOwnMessage ? "message-bubble me" : "message-bubble them"}
+            style={{
+              position: 'relative',
+              paddingBottom: '24px',
+              alignSelf: isOwnMessage ? 'flex-end' : 'flex-start',
+              marginBottom: '12px',
+              maxWidth: '65%'
+            }}
+          >
+            {/* 1. Cloudinary Images */}
+            {isAnImage ? (
+              <img
+                src={content.message}
+                alt="Shared attachment"
+                style={{ maxWidth: '100%', maxHeight: '250px', borderRadius: '8px', marginTop: '4px' }}
+              />
+            ) : (
+              <p style={{ margin: 0 }}>{content.message}</p>
+            )}
 
-      <span style={{
-        fontSize: '10px',
-        color: 'var(--text-muted)',
-        position: 'absolute',
-        bottom: '2px',
-        right: '8px'
-      }}>
-                    {content.timestamp ? new Date(content.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                    {isOwnMessage && (content.status === 'read' ? ' ✔️✔️' : ' ✔️')}
-                  </span>
-                </div>
-              );
-            })}
+            {/* 2. Timestamps & Status Receipts */}
+            <span style={{
+              fontSize: '10px',
+              color: 'var(--text-muted)',
+              position: 'absolute',
+              bottom: '2px',
+              right: isOwnMessage ? '26px' : '8px'
+            }}>
+              {content.time || (content.timestamp ? new Date(content.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '')}
+              {isOwnMessage && (content.status === 'read' ? ' ✓✓' : ' ✓')}
+            </span>
+
+            {/* 3. Trash Bin Delete Button */}
+            {isOwnMessage && (
+              <button 
+                onClick={() => deleteMessage(content.id)}
+                style={{
+                  position: 'absolute',
+                  bottom: '2px',
+                  right: '6px',
+                  background: 'none',
+                  border: 'none',
+                  color: '#ff4d4d',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  opacity: 0.8,
+                  padding: '2px',
+                  zIndex: 10
+                }}
+                title="Delete message"
+              >
+                🗑️
+              </button>
+            )}
+          </div>
+        );
+      })}
           
        <div ref={messagesEndRef} />
     </div>
